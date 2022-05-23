@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.gamecenter.mapper.commentMapper">
+    <insert id="addComment">
+        insert into comment(email, description, gameName, score)values (#{email},#{description},#{gameName},#{score});
+        update game set averageScore=(averageScore*numberOfPeople+#{score})/(numberOfPeople+1),
+                        numberOfPeople=numberOfPeople+1 where name=#{gameName};
+
+    </insert>
+    <select id="searchComment" resultType="com.example.gamecenter.bean.comment">
+select email,gameName,description,score,name from comment natural join user where email=#{email} and gameName=#{gameName};
+    </select>
+    <update id="updateComment">
+        update game set averageScore=
+            if(numberOfPeople>1,
+            (averageScore*numberOfPeople-(select score from comment where email=#{email} and gameName=#{gameName}))/(numberOfPeople-1),5),
+                        numberOfPeople=numberOfPeople-1 where name=#{gameName};
+       update comment set description = #{description},score=#{score} where email=#{email} and gameName=#{gameName};
+       update game set averageScore=(averageScore*numberOfPeople+#{score})/(numberOfPeople+1),
+                       numberOfPeople=numberOfPeople+1 where name=#{gameName};
+    </update>
+    <delete id="deleteComment">
+        update game set averageScore=
+                            if(numberOfPeople>1,
+                               (averageScore*numberOfPeople-(select score from comment where email=#{email} and gameName=#{gameName}))/(numberOfPeople-1),5),
+                        numberOfPeople=numberOfPeople-1 where name=#{gameName};
+       delete from comment where email=#{email} and gameName=#{gameName};
+    </delete>
+</mapper>
