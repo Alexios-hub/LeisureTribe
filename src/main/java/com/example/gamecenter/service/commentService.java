@@ -15,6 +15,9 @@ public class commentService {
     private commentMapper commentMapper;
     @Autowired
     private tokenUtil tokenUtil;
+    @Autowired
+    private gameService gameService;
+
 
     public ResponseEntity<JSONObject>writeComment(String email,String description,String gameName,int score,String token){
         if(tokenUtil.validate(email,token)){
@@ -68,5 +71,27 @@ public class commentService {
             result.put("status",HttpStatus.UNAUTHORIZED);
             return new ResponseEntity<>(result,HttpStatus.UNAUTHORIZED);
         }
+    }
+
+    public ResponseEntity<JSONObject> searchGameComment(String email,String token,String gameName){
+        if(tokenUtil.validate(email,token)) {
+            tokenUtil.updateToken(email);
+            comment[] searchResult = commentMapper.searchGameComment(gameName);
+            System.out.println(searchResult);
+            JSONObject returnResult = new JSONObject();
+            returnResult.put("comments", searchResult);
+            returnResult.put("status", HttpStatus.OK);
+            returnResult.put("msg", "ok");
+            float averageScore = gameService.getAvarageScore(gameName);
+            returnResult.put("averageScore",averageScore);
+            return new ResponseEntity<JSONObject>(returnResult, HttpStatus.OK);
+        }
+        else{
+            JSONObject result=new JSONObject();
+            result.put("msg","token authentication failed");
+            result.put("status",HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(result,HttpStatus.UNAUTHORIZED);
+        }
+
     }
 }

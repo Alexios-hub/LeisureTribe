@@ -30,6 +30,8 @@ public class userService {
             response.put("msg","ok");
             response.put("token",token);
             response.put("status",HttpStatus.OK);
+            response.put("userName",result.getName());
+            response.put("headPortrait",result.getHeadPortrait());
             return new ResponseEntity<JSONObject>(response, HttpStatus.OK);
         }
         else{
@@ -113,6 +115,22 @@ public class userService {
                 result.put("status",HttpStatus.INTERNAL_SERVER_ERROR);
                 return new ResponseEntity<JSONObject>(result,HttpStatus.INTERNAL_SERVER_ERROR);
             }
+        }
+        else {
+            JSONObject result=new JSONObject();
+            result.put("msg","token authentication failed");
+            result.put("status",HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<JSONObject>(result,HttpStatus.UNAUTHORIZED);
+        }
+    }
+    public ResponseEntity<JSONObject> updateUserName(String email, String token , String name){
+        if(tokenUtil.validate(email,token)){
+            userMapper.updateUserName(email,name);
+            JSONObject result = new JSONObject();
+            result.put("msg","ok");
+
+            return new ResponseEntity<>(result,HttpStatus.OK);
+
         }
         else {
             JSONObject result=new JSONObject();

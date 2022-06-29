@@ -12,4 +12,5 @@ public interface userMapper {
     user login(String email,String password);
     user searchUser(String email);
     void updateHeadPortrait(String email,String headPortrait);
+    void updateUserName(String email,String name);
 }

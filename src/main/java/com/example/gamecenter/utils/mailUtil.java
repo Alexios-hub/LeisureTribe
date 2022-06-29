@@ -6,15 +6,20 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
 
+
 @Component
 public class mailUtil {
     @Autowired
     private JavaMailSender mailSender;
+    @Autowired
+    private TemplateEngine templateEngine;
     private String from="leisuretribe@163.com";
     public void sendSimpleMail(String to,String subject,String content){
         SimpleMailMessage message=new SimpleMailMessage();
@@ -25,7 +30,7 @@ public class mailUtil {
         mailSender.send(message);
     }
 
-    public void sendHtmlMail(String to,String subject,String content){
+    public void sendHtmlMail(String to,String subject,String code){
         MimeMessage message=mailSender.createMimeMessage();
         MimeMessageHelper messageHelper;
         try {
@@ -33,7 +38,10 @@ public class mailUtil {
             messageHelper.setFrom(from);
             messageHelper.setTo(to);
             message.setSubject(subject);
-            messageHelper.setText(content);
+            Context context = new Context();
+            context.setVariable("code",code);
+            String emailTemplate = templateEngine.process("mailHtml", context);
+            messageHelper.setText(emailTemplate,true);
             mailSender.send(message);
         } catch (MessagingException e) {
             e.printStackTrace();
@@ -47,6 +55,7 @@ public class mailUtil {
             MimeMessageHelper helper=new MimeMessageHelper(message,true);
             helper.setFrom(from);
             helper.setTo(to);
+
             helper.setSubject(subject);
             helper.setText(content,true);
             FileSystemResource file =new FileSystemResource(new File(filePath));

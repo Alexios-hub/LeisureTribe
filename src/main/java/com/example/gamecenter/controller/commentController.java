@@ -15,7 +15,7 @@ public class commentController {
     @Autowired
     private commentService commentService;
     @ApiOperation(value = "发布评论和评分")
-    @RequestMapping(value = "/writeComment",method = RequestMethod.POST)
+    @RequestMapping(value = "/writeComment",method = RequestMethod.GET)
     public ResponseEntity<JSONObject>writeComment(@RequestHeader(value = "email")String email, @RequestHeader(value = "token") String token, @RequestParam(value = "description") String description,@RequestParam(value = "gameName")String gameName,@RequestParam(value = "score")String scoreStr){
         int score=Integer.valueOf(scoreStr);
         return commentService.writeComment(email,description,gameName,score,token);
@@ -24,5 +24,11 @@ public class commentController {
     @RequestMapping(value = "/deleteComment",method = RequestMethod.GET)
     public ResponseEntity<JSONObject>deleteComment(@RequestHeader(value = "email")String email,@RequestHeader(value = "token")String token,@RequestParam(value = "gameName") String gameName){
         return commentService.deleteComment(email,gameName,token);
+    }
+
+    @ApiOperation(value = "查询一个游戏的所有评论")
+    @RequestMapping(value = "/searchGameComment",method = RequestMethod.GET)
+    public ResponseEntity<JSONObject>searchGameComment(@RequestHeader(value = "email")String email,@RequestHeader(value = "token")String token,@RequestParam(value = "gameName")String gameName){
+        return commentService.searchGameComment(email,token,gameName);
     }
 }

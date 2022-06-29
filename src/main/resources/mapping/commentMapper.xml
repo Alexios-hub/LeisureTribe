@@ -26,4 +26,7 @@ select email,gameName,description,score,name from comment natural join user wher
                         numberOfPeople=numberOfPeople-1 where name=#{gameName};
        delete from comment where email=#{email} and gameName=#{gameName};
     </delete>
+    <select id="searchGameComment" resultType="com.example.gamecenter.bean.comment">
+        select email, name as userName, description, gameName, score from comment natural join user where gameName=#{gameName}
+    </select>
 </mapper>

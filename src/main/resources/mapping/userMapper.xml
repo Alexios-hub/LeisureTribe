@@ -12,7 +12,10 @@
         insert into user(email, name, password)values (#{email},#{name},#{password})
     </insert>
     <update id="updateHeadPortrait">
-        update user set `head portrait`=#{headPortrait} where email = #{email}
+        update user set `headPortrait`=#{headPortrait} where email = #{email}
+    </update>
+    <update id="updateUserName">
+        update user set name = #{name} where email = #{email}
     </update>
 
 </mapper>

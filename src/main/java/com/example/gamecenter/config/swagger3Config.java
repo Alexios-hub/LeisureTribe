@@ -49,7 +49,7 @@ public class swagger3Config {
                 .description("后端接口文档")
                 //作者信息
 //                .contact(new Contact("刘洪博","https://xuyijie.icu/", "528754347@qq.com"))
-                .version("1.0")
+                .version("1.2")
                 .build();
     }
 }

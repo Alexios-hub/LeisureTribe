@@ -66,5 +66,11 @@ public class userController {
         return userService.logOut(email,token);
     }
 
+    @ApiOperation(value = "更改姓名")
+    @RequestMapping(value = "/changeName",method = RequestMethod.GET,headers = {"token","email"})
+    public ResponseEntity<JSONObject>changeName(@RequestHeader(value = "email")String email,@RequestHeader(value = "token")String token,@RequestParam(value = "name")String name){
+        return userService.updateUserName(email,token,name);
+    }
+
 
 }

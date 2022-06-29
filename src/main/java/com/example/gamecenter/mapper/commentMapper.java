@@ -11,5 +11,6 @@ public interface commentMapper {
     comment searchComment(String email, String gameName);
     void updateComment(String email,String description,String gameName,int score);
     void deleteComment(String email,String gameName);
+    comment[] searchGameComment(String gameName);
 
 }
